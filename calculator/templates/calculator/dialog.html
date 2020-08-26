@@ -1,0 +1,50 @@
+{% block content %}
+{% load humanize %}
+<style>
+   .text-kasko
+   {
+     margin-left: 40px;
+     color:#004d00;
+   }
+
+   .text-telematika
+   {
+     margin-left: 14px;
+     color:#004d00;
+     font-size: 14pt;
+   }
+
+   table
+   {
+     margin-left:40px;
+   }
+
+   td, th
+   {
+     padding-right: 5px;
+     padding-left: 10px;
+   }
+
+   .dialog-table{
+     text-align: right;
+   }
+</style>
+<table class="space" border="1">
+  <h3 class="text-kasko">Диалог</h3>
+  <div style="margin-left: 40px;">
+</div>
+  <tr>
+    <td>Франшиза, руб.</td>
+    <td>Скидка, руб.</td>
+    <td>Страховая премия, руб.</td>
+  </tr>
+  {% for prise in prise_rate %}
+  <tr>
+    <td class="dialog-table">{{ prise.0|floatformat:2|intcomma }}</td>
+    <td class="dialog-table">{{ prise.1|floatformat:2|intcomma }}</td>
+    <td class="dialog-table">{{ prise.2|floatformat:2|intcomma }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

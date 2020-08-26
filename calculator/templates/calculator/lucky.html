@@ -1,0 +1,41 @@
+{% block content %}
+{% load humanize %}
+<style>
+   .text-kasko
+   {
+     margin-left: 40px;
+     color:#004d00;
+   }
+
+   .text-telematika
+   {
+     margin-left: 14px;
+     color:#004d00;
+     font-size: 14pt;
+   }
+
+   table
+   {
+     margin-left:40px;
+   }
+
+   td, th
+   {
+     padding-right: 5px;
+     padding-left: 10px;
+   }
+</style>
+<table class="space" border="1">
+  <h3 class="text-kasko">Удача</h3>
+  <tr>
+    <td>Страховая премия, руб.</td>
+    <td>Франшиза</td>
+    <td>Тариф</td>
+  </tr>
+  <tr class="table-success">
+    <td style="text-align: right;">{{ prise_luck|floatformat:2|intcomma }}</td>
+    <td style="text-align: right;">10%</td>
+    <td style="text-align: right;">{{ rates_luck|floatformat:2|intcomma }}</td>
+  </tr>
+</table>
+{% endblock %}

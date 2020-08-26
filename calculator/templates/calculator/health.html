@@ -1,0 +1,38 @@
+{% block content %}
+{% load humanize %}
+<style>
+   .text-kasko
+   {
+     margin-left: 40px;
+     color:#004d00;
+   }
+
+   table
+   {
+     margin-left:40px;
+   }
+
+   td, th
+   {
+     padding-right: 5px;
+     padding-left: 10px;
+   }
+</style>
+<table class="space" border="1">
+  <h3 class="text-kasko">Страхование жизни и здоровья</h3>
+  <tr>
+    <td>Страховая сумма</td>
+    <td>до 50 000 руб.</td>
+    <td>свыше 50 000 руб.</td>
+    <td>Страховая сумма на<br>каждое посадочное место, руб.</td>
+    <td>Страховая премия, руб.</td>
+  </tr>
+  <tr>
+    <td class="dialog-table">{{ health.0 }}</td>
+    <td class="dialog-table">{{ health.1 }}%</td>
+    <td class="dialog-table">{{ health.2}}%</td>
+    <td class="dialog-table">{{ health.3|floatformat:2|intcomma }}</td>
+    <td class="dialog-table">{{ health.4|floatformat:2|intcomma }}</td>
+  </tr>
+</table>
+{% endblock %}

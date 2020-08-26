@@ -1,0 +1,98 @@
+﻿{% extends 'calculator/base.html' %}
+{% load static %}
+  {% block title %} Результат расчета {% endblock %}
+
+  {% block head %}
+  <link rel="shortcut icon" href="{% static 'icons/ans.png'%}" type="image/png">
+  {% endblock %}
+
+  {% block content %}
+
+<style>
+.ramka
+    {
+      margin: 0 auto;                   /* положение по центру экрана */
+      width: 1200px;	                  /* ширина */
+      background: #E9F6E2;              /* цвет фона */
+      border-right: 1px solid #23A650;  /* зеленая рамка */
+      border-left:  1px solid #23A650;  /* зеленая рамка */
+    }
+
+  .but-kasko
+    {
+      text-decoration:none; text-align:center;
+      margin-right: 0px;
+      padding:11px 32px;
+      border:solid 1px #16b546;
+      border-radius: 4px;
+      font:16px Arial, Helvetica, sans-serif;
+      font-weight:bold;
+      color:#ffffff;
+      background-color:#38871b;
+      background-image: linear-gradient(top, #38871b 0% ,#137818 100%);
+    }
+
+  .but-kasko:hover
+    {
+      margin-right: 0px;
+      padding:11px 32px;
+      border:solid 1px #16b546;
+      border-radius: 4px;
+      font:16px Arial, Helvetica, sans-serif;
+      font-weight:bold;
+      color:#ffffff;
+      background-color:#589940;
+      background-image: linear-gradient(top, #589940 0% ,#248529 100%);
+      box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    }
+</style>
+
+
+ <div class="ramka">
+   <div class="print">
+  <h2 class="text-monospace" style="margin-left: 300px; ">Расчёт стоимости полиса КАСКО</h2>
+  {% if "auto" in number_rates %}
+  {% include 'calculator/auto-casko.html' %}
+  {% endif %}
+  <br>
+  {% if "new" in number_rates %}
+  {% include 'calculator/new-casko.html' %}
+  {% endif %}
+  <br>
+  {% if "tele" in number_rates %}
+  {% include 'calculator/telematika.html' %}
+  {% endif %}
+  <br>
+  {% if "luck" in number_rates %}
+  {% include 'calculator/lucky.html' %}
+  {% endif %}
+  <br>
+  {% if "dia" in number_rates %}
+  {% include 'calculator/dialog.html' %}
+  {% endif %}
+  <br>
+  {% if "voluntary" in number_rates %}
+  {% include 'calculator/voluntary.html' %}
+  {% endif %}
+  <br>
+  {% if "health" in number_rates %}
+  {% include 'calculator/health.html' %}
+  {% endif %}
+  <br>
+  </div>
+  <button type="button" name="button" id="print" class="but-kasko">Распечатать</button>
+  <a href="{% url 'info' %}" class="but-kasko" role="button" aria-pressed="true" target="_blank">Информация</a>
+</div>
+<script type="text/javascript">
+  $("#print").click(function(){
+    // var data = document.getElementsByClassName('ramka');
+    var data = $(".print").html();
+    var pdf = window.open("", "", "width = 900, height = 700");
+    pdf.document.write(data);
+    pdf.document.close();
+    pdf.focus();
+    pdf.print();
+    pdf.close();
+  })
+</script>
+{% endblock %}

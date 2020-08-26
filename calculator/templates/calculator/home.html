@@ -1,0 +1,301 @@
+{% extends 'calculator/base.html' %}
+{% block title %} Журнал пользователя {% endblock %}
+
+{% load static %}
+{% block head %}
+<link rel="shortcut icon" href="{% static 'icons/home.png'%}" type="image/png">
+{% endblock %}
+
+{% block content %}
+<style>
+
+    a       { text-decoration: none; }
+    a:hover { text-decoration: none; }
+
+
+    .input_find
+    {
+      width: 320px;
+      font-size: 16px;
+      padding: 6px 0 4px 10px;
+      border: 1px solid #cecece;
+      background: #F6F6f6;
+    }
+
+
+    .pagination
+    {
+      padding:11px 38px;
+    }
+
+    .but-kasko-cancel
+    {
+      text-decoration:none; text-align:center;
+       padding:9px 32px 5px 32px;
+       border:solid 1px #692807;
+       border-radius: 4px;
+       font:16px Arial, Helvetica, sans-serif;
+       font-weight:bold;
+       color:#ffffff;
+       background-color:#963a13;
+       background-image: linear-gradient(top, #963a13 0% ,#591b00 100%);
+       box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    }
+
+    .but-kasko-cancel:hover
+    {
+       padding:9px 32px 5px 32px;
+       border:solid 1px #943709;
+       border-radius: 4px;
+       font:16px Arial, Helvetica, sans-serif;
+       font-weight:bold;
+       color:#ffffff;
+       background-color:#661d05;
+       background-image: linear-gradient(top, #661d05 0% ,#4a0a0a 100%);
+       box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+     }
+
+    .but-kasko
+    {
+      text-decoration:none; text-align:center;
+      margin-right: 0px;
+      padding:9px 32px 5px 32px;
+      border:solid 1px #16b546;
+      border-radius: 4px;
+      font:16px Arial, Helvetica, sans-serif;
+      font-weight:bold;
+      color:#ffffff;
+      background-color:#38871b;
+      background-image: linear-gradient(top, #38871b 0% ,#137818 100%);
+    }
+
+    .but-kasko:hover
+    {
+      margin-right: 0px;
+      padding:9px 32px 5px 32px;
+      border:solid 1px #16b546;
+      border-radius: 4px;
+      font:16px Arial, Helvetica, sans-serif;
+      font-weight:bold;
+      color:#ffffff;
+      background-color:#589940;
+      background-image: linear-gradient(top, #589940 0% ,#248529 100%);
+      box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    }
+
+    .text-user
+    {
+      font-style: italic;
+      padding-right: 20px;  /* отступ сверху */
+      text-align: right;    /* текст справа*/
+      font-size: 12pt;      /* размер шрифта */
+      color: #3B7E4F;       /* зеленый цвет шрифта */
+    }
+
+    .text-number
+    {
+      text-align: center;   /* текст по центру */
+      font-size: 18pt;      /* размер шрифта */
+      color: #140B00;       /* коричневый цвет шрифта */
+    }
+
+    .text-head
+    {
+      padding-top: 20px;
+      color:#004d00;
+    }
+
+    .text-label-check
+    {
+      padding-right: 20px;
+      color: #140B00;
+    }
+
+    .text-label
+    {
+      color:#140B00;
+    }
+
+
+    .ramka
+    {
+      margin: 0 auto;                   /* положение по центру экрана */
+      width: 1200px;	                  /* ширина */
+      background: #E9F6E2;              /* цвет фона */
+      border-right: 1px solid #23A650;  /* зеленая рамка */
+      border-left:  1px solid #23A650;  /* зеленая рамка */
+    }
+  </style>
+  <script type="text/javascript">
+    function SelectAll() {
+    var qwe = document.getElementsByClassName('qwe');
+    var check = true;
+      for(var i=0; i<qwe.length; i++){
+          if(qwe[i].checked == false){
+            check = false;
+            break;
+          }
+        }
+      if(check == true){
+        for(var i=0; i<qwe.length; i++){
+              qwe[i].checked = false;
+            }
+      }
+      else{
+        for(var i=0; i<qwe.length; i++){
+              qwe[i].checked = true;
+            }
+      }
+      }
+  </script>
+  <div id="hydro_ajax">
+<div class="ramka">
+
+  {% if user.is_authenticated %}
+  <h2 class="text-user" style="padding-top: 10px;">Сотрудник: {{ user.get_username }}</h2>
+
+  <h3 class="text-number">Журнал страховых расчётов</h3>
+  <div style="margin-top: 30px;"></div>
+  <div class="container-fluid">
+    <div class="container-fluid">
+      <a href="/options/" class="but-kasko" role="button" aria-pressed="true" target="_blank">Новый страховой расчет</a>
+      <input class="input_find" type="text" id="find-input" placeholder="Поиск по фамилии">
+      <button id="find" class="but-kasko" type="button" name="button" aria-pressed="true">Найти</button>
+      <button type="button" class="but-kasko" name="button" id="del-button" aria-pressed="true">Пометить на удаление</button>
+      <a href="{% url 'logout' %}?next=/login/" class="but-kasko-cancel" role="button" aria-pressed="true">Выход</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="pagination">
+  <span class="step-links" align="center">
+    {% if drivers.has_previous %}
+        <a href="?page={{ drivers.previous_page_number }}">Назад</a>
+    {% endif %}
+
+    <span class="current">
+        Страница {{ drivers.number }} из {{ drivers.paginator.num_pages }}.
+    </span>
+
+    {% if drivers.has_next %}
+        <a href="?page={{ drivers.next_page_number }}">вперед</a>
+    {% endif %}
+  </span>
+  </div>
+  <table align="center" border="2" class="space" id="ans" width="90%">
+    <tr class="table-success" align="center">
+      <td><input type="checkbox" id="checkedAll"></td>
+      <td>Дата / Время</td>
+      <td>Номер</td>
+      <td>Клиент (Ф.И.О)</td>
+      <td>Марка + Модель</td>
+      <td>Статус</td>
+    </tr>
+
+    {% for driver in drivers %}
+    <tr class="homehover">
+      <td align="center"><input type="checkbox" class="qwe" id="{{ driver.id }}"></td>
+      <td align="center">{{ driver.date|date:"d.m.Y" }}&nbsp;&nbsp;&nbsp;{{ driver.date|date:"H:i" }}</td>
+      <td align="center">{{ driver.id }}</td>
+      <td>
+          {{ driver.familyname }}
+          {{ driver.name }}
+          {{ driver.father_name }}
+      </td>
+
+      <td>
+          {{ driver.brand }}
+          {{ driver.model }}
+      </td>
+
+      <td align="center" class="active"><a id="{{ driver.id }}" href="/check_record/" target="_blank ">{{ driver.status }}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+  let table = document.querySelector("#ans");
+  let links = document.querySelectorAll('a');
+  for(let i=0; i<links.length; i++){
+    links[i].href = links[i].href+links[i].id;
+  }
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#find').click(function(e) {
+      e.preventDefault();
+       var data = $("#find-input").val();
+      $.ajax({
+        method: "GET",
+        url: "{% url 'find' %}",
+        data: {data: data},
+        success: function(data) {
+          console.log("Отправилось");
+          $('#hydro_ajax').html(data);
+        },
+        error: function(er) {
+          console.log("Не отправилось");
+        }
+      });
+    })
+
+    $('#del-button').click(function(e) {
+      e.preventDefault();
+      var data = [];
+      $('input:checkbox:checked').each(function() {
+        data.push($(this).attr('id'));
+        });
+      $.ajax({
+        method: "GET",
+        url: "{% url 'del_hum' %}",
+        data: {data: data},
+        success: function(data) {
+          console.log("Отправилось");
+          location.reload();
+        },
+        error: function(er) {
+          console.log("Не отправилось");
+        }
+      });
+    })
+  });
+</script>
+<script>
+$(document).ready(function() {
+    $("#checkedAll").change(function() {
+        if (this.checked) {
+            $(".qwe").each(function() {
+                this.checked=true;
+            });
+        } else {
+            $(".qwe").each(function() {
+                this.checked=false;
+            });
+        }
+    });
+
+    $(".qwe").click(function () {
+        if ($(this).is(":checked")) {
+            var isAllChecked = 0;
+
+            $(".qwe").each(function() {
+                if (!this.checked)
+                    isAllChecked = 1;
+            });
+
+            if (isAllChecked == 0) {
+                $("#checkedAll").prop("checked", true);
+            }
+        }
+        else {
+            $("#checkedAll").prop("checked", false);
+        }
+    });
+});
+</script>
+{% endblock %}

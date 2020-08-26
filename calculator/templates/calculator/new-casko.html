@@ -1,0 +1,31 @@
+{% block content %}
+{% load humanize %}
+
+<style>
+   .text-kasko
+   {
+     margin-left: 40px;
+     color:#004d00;
+   }
+
+   table
+   {
+     margin-left:40px;
+   }
+   
+   td, th 
+   {
+     padding-right: 5px; 
+   }
+</style>
+
+<table border="1">
+  <h3 class="text-kasko">Новое Каско (500+)</h3>
+  <tr align="center">
+    <td width="150">Тариф</td>
+    <td width="135">{{ rates_new|floatformat:2|intcomma }}</td>
+    <td width="160">Страховая премия</td>
+    <td width="155">{{ prise_new|floatformat:2|intcomma }}</td>
+  </tr>
+</table>
+{% endblock %}

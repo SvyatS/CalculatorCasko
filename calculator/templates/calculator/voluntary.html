@@ -1,0 +1,36 @@
+{% block content %}
+{% load humanize %}
+<style>
+   .text-kasko
+   {
+     margin-left: 40px;
+     color:#004d00;
+   }
+
+   table
+   {
+     margin-left:40px;
+   }
+
+   td, th
+   {
+     padding-right: 5px;
+     padding-left: 10px;
+   }
+</style>
+<table class="space" border="1">
+  <h3 class="text-kasko">Добровольное страхование автогражданской ответственности</h3>
+  <tr>
+    <td>Страховая сумма</td>
+    <td>Страховая премия</td>
+    <td>Стоимость полиса ОСАГО, руб.</td>
+    <td>Страховая премия, руб.</td>
+  </tr>
+  <tr>
+    <td class="dialog-table">{{ voluntary.0 }} руб.</td>
+    <td class="dialog-table">{{ voluntary.1 }}</td>
+    <td class="dialog-table">{{ voluntary.2|floatformat:2|intcomma }}</td>
+    <td class="dialog-table">{{ voluntary.3|floatformat:2|intcomma }}</td>
+  </tr>
+</table>
+{% endblock %}

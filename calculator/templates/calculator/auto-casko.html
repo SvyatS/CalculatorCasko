@@ -1,0 +1,215 @@
+{% block content %}
+{% load humanize %}
+
+<style>
+   .text-kasko
+   {
+     margin-left: 40px;
+     color:#004d00;
+   }
+
+   table
+   {
+     margin-left:40px;
+   }
+
+   td, th
+   {
+     padding-right: 5px;
+   }
+   .hide, .hide + label ~ div {
+       display: none;
+       margin-left: 40px;
+   }
+   /* вид текста label */
+   .hide + label,
+   .hide:checked + label {
+      margin-left: 40px;
+       padding: 0;
+       color: green;
+       cursor: pointer;
+       border-bottom: 1px dotted green;
+   }
+   /* вид текста label при активном переключателе */
+   .hide:checked + label {
+      margin-left: 40px;
+       color: red;
+       border-bottom: 0;
+   }
+   /* когда чекбокс активен показываем блоки с содержанием  */
+   .hide:checked + label + div {
+      margin-left: 40px;
+       display: block;
+       background: #efefef;
+       border: 1px solid black;
+       padding: 10px;
+   }
+</style>
+
+
+<div style="margin-left: 40px;">
+<b>Страхователь: </b>{{ familyname }} {{ name }} {{ father_name  }}
+<br>
+<b>Транспортное средство: </b> Марка:{{ brand }}&emsp;Модель: {{ model }}&emsp; Год выпуска: {{ car_year  }}
+<br>
+<b>Страховая сумма : </b>{{ prise_car|floatformat:2|intcomma }}руб.
+<br>
+<input type="checkbox" class="risks">
+  <label>ДТП по вине третьих лиц</label><br>
+
+<input type="checkbox" class="risks">
+  <label>ДТП по вине водителей застрахованного ТС</label><br>
+
+<input type="checkbox" class="risks">
+  <label>Механические повреждения</label><br>
+
+<input type="checkbox" class="risks">
+  <label>Противоправные действия третьих лиц</label><br>
+
+<input type="checkbox" class="risks">
+  <label>Бой стекол ТС</label><br>
+
+<input type="checkbox" class="risks">
+  <label>Хищение</label><br>
+</div>
+
+<h3 class="text-kasko">Авто-Каско</h3>
+<input class="hide" id="hd-1" type="checkbox" >
+  <table border="1">
+    <tr>
+      <td>ТБ</td>
+      <td>КВС</td>
+      <td>КД</td>
+      <td>ККЛ</td>
+      <td>ККР</td>
+      <td>КР</td>
+      <td>КМ</td>
+      <td>А.кф</td>
+    </tr>
+    <tr>
+      <td>{{ tb|floatformat:2|intcomma }}</td>
+      <td>{{ kvs|floatformat:2|intcomma }}</td>
+      <td>{{ kd|floatformat:2|intcomma }}</td>
+      <td>{{ kkl|floatformat:2|intcomma }}</td>
+      <td>{{ kkr|floatformat:2|intcomma }}</td>
+      <td>{{ kr|floatformat:2|intcomma }}</td>
+      <td>{{ km|floatformat:2|intcomma }}</td>
+      <td>{{ ander|floatformat:2|intcomma }}</td>
+    </tr>
+  </table>
+
+<br>
+
+<table border="1" width="1000">
+  <tr align="center">
+    <td width="120">тариф</td>
+    <td>{{ rates|floatformat:2|intcomma }}%</td>
+    <td>страховая премия<br>без износа</td>
+    <td>{{ prise|floatformat:2|intcomma }}</td>
+    <td colspan="3">страховая премия<br>с износом</td>
+    <td>{{ prise_wear|floatformat:2|intcomma }}</td>
+  </tr>
+  <tr class="table-active" align="center">
+    <td colspan="4">без износа</td>
+    <td colspan="6">с износом</td>
+  </tr>
+  <tr class="table-success" align="center">
+    <td width = "150">франшиза<br>безусловная</td>
+    <td>франшиза, руб.</td>
+    <td>тариф, %</td>
+    <td>страховая<br>премия</td>
+    <td>франшиза<br>безусловная</td>
+    <td>франшиза, руб.</td>
+    <td>тариф, %</td>
+    <td>страховая<br>премия</td>
+  </tr>
+  <tr align="right">
+    <td>1%</td>
+    <td>{{ franz.0.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz.0.1|floatformat:2|intcomma }}%</td>
+    <td>{{ franz.0.2|floatformat:2|intcomma }}</td>
+    <td>1%</td>
+    <td>{{ franz.0.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz_wear.0.0|floatformat:2|intcomma }}%</td>
+    <td>{{ franz_wear.0.1|floatformat:2|intcomma }}</td>
+  </tr>
+
+  <tr align="right">
+    <td>3%</td>
+    <td>{{ franz.1.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz.1.1|floatformat:2|intcomma }}%</td>
+    <td>{{ franz.1.2|floatformat:2|intcomma }}</td>
+    <td>3%</td>
+    <td>{{ franz.1.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz_wear.1.0|floatformat:2|intcomma }}%</td>
+    <td>{{ franz_wear.1.1|floatformat:2|intcomma }}</td>
+  </tr>
+
+  <tr align="right">
+    <td>5%</td>
+    <td>{{ franz.2.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz.2.1|floatformat:2|intcomma }}%</td>
+    <td>{{ franz.2.2|floatformat:2|intcomma }}</td>
+    <td>5%</td>
+    <td>{{ franz.2.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz_wear.2.0|floatformat:2|intcomma }}%</td>
+    <td>{{ franz_wear.2.1|floatformat:2|intcomma }}</td>
+  </tr>
+
+  <tr align="right">
+    <td>10%</td>
+    <td>{{ franz.3.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz.3.1|floatformat:2|intcomma }}%</td>
+    <td>{{ franz.3.2|floatformat:2|intcomma }}</td>
+    <td>10%</td>
+    <td>{{ franz.3.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz_wear.3.0|floatformat:2|intcomma }}%</td>
+    <td>{{ franz_wear.3.1|floatformat:2|intcomma }}</td>
+  </tr>
+
+  <tr align="right">
+    <td>25%</td>
+    <td>{{ franz.4.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz.4.1|floatformat:2|intcomma }}%</td>
+    <td>{{ franz.4.2|floatformat:2|intcomma }}</td>
+    <td>25%</td>
+    <td>{{ franz.4.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz_wear.4.0|floatformat:2|intcomma }}%</td>
+    <td>{{ franz_wear.4.1|floatformat:2|intcomma }}</td>
+  </tr>
+
+  <tr align="right">
+    <td>50%</td>
+    <td>{{ franz.5.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz.5.1|floatformat:2|intcomma }}%</td>
+    <td>{{ franz.5.2|floatformat:2|intcomma }}</td>
+    <td>50%</td>
+    <td>{{ franz.5.0|floatformat:2|intcomma }}</td>
+    <td>{{ franz_wear.5.0|floatformat:2|intcomma }}%</td>
+    <td>{{ franz_wear.5.1|floatformat:2|intcomma }}</td>
+  </tr>
+</table>
+<table border="1" width="1000">
+  <h3 class="text-kasko">Тотал угон</h3>
+  <tr align="center">
+    <td width="120">тариф</td>
+    <td>{{ total_damage.0|floatformat:2|intcomma }}%</td>
+    <td>страховая премия<br>без износа</td>
+    <td>{{ total_damage.1|floatformat:2|intcomma }}</td>
+    <td colspan="3">страховая премия<br>с износом</td>
+    <td>{{ total_damage.2|floatformat:2|intcomma }}</td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+  let elems=document.querySelectorAll('.risks');
+  let i=0;
+  {% for risk in risks %}
+    if("{{ risk }}" === "True"){
+      elems[i].checked = true;
+    }
+    i++;
+  {% endfor %}
+</script>
+{% endblock %}

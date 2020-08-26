@@ -1,0 +1,477 @@
+﻿{% extends 'calculator/base.html' %}
+{% load static %}
+{% block title %} Форма расчета {% endblock %}
+
+{% block head %}
+<link rel="shortcut icon" href="{% static 'icons/edit.png'%}" type="image/png">
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+<script type="text/javascript">
+  function cislo(){
+    if (event.keyCode < 48 || event.keyCode > 57)
+    event.returnValue= false;
+}
+
+  function SelectAll() {
+  var qwe = document.getElementsByClassName('qwe');
+  var check = true;
+    for(var i=0; i<qwe.length; i++){
+        if(qwe[i].checked == false){
+          check = false;
+          break;
+        }
+      }
+    if(check == true){
+      for(var i=0; i<qwe.length; i++){
+            qwe[i].checked = false;
+          }
+    }
+    else{
+      for(var i=0; i<qwe.length; i++){
+            qwe[i].checked = true;
+          }
+    }
+    }
+</script>
+<style>
+
+    .but-kasko-cancel
+    {
+      text-decoration:none; text-align:center;
+       padding:11px 32px;
+       border:solid 1px #692807;
+       border-radius: 4px;
+       font:16px Arial, Helvetica, sans-serif;
+       font-weight:bold;
+       color:#ffffff;
+       background-color:#963a13;
+       background-image: linear-gradient(top, #963a13 0% ,#591b00 100%);
+       box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    }
+
+    .but-kasko-cancel:hover
+    {
+       padding:11px 32px;
+       border:solid 1px #943709;
+       border-radius: 4px;
+       font:16px Arial, Helvetica, sans-serif;
+       font-weight:bold;
+       color:#ffffff;
+       background-color:#661d05;
+       background-image: linear-gradient(top, #661d05 0% ,#4a0a0a 100%);
+       box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+     }
+
+    .but-kasko
+    {
+      text-decoration:none; text-align:center;
+      margin-right: 0px;
+      padding:11px 32px;
+      border:solid 1px #16b546;
+      border-radius: 4px;
+      font:16px Arial, Helvetica, sans-serif;
+      font-weight:bold;
+      color:#ffffff;
+      background-color:#38871b;
+      background-image: linear-gradient(top, #38871b 0% ,#137818 100%);
+    }
+
+    .but-kasko:hover
+    {
+      margin-right: 0px;
+      padding:11px 32px;
+      border:solid 1px #16b546;
+      border-radius: 4px;
+      font:16px Arial, Helvetica, sans-serif;
+      font-weight:bold;
+      color:#ffffff;
+      background-color:#589940;
+      background-image: linear-gradient(top, #589940 0% ,#248529 100%);
+      box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    }
+
+    .text-user
+    {
+      font-style: italic;
+      padding-right: 20px;  /* отступ сверху */
+      text-align: right;    /* текст справа*/
+      font-size: 12pt;      /* размер шрифта */
+      color: #3B7E4F;       /* зеленый цвет шрифта */
+    }
+
+    .text-number
+    {
+      text-align: center;   /* текст по центру */
+      font-size: 18pt;      /* размер шрифта */
+      color: #140B00;       /* коричневый цвет шрифта */
+    }
+
+    .text-head
+    {
+      padding-top: 20px;
+      color:#004d00;
+    }
+
+    .text-label-check
+    {
+      padding-right: 20px;
+      color: #140B00;
+    }
+
+    .text-label
+    {
+      color:#140B00;
+    }
+
+
+    .ramka
+    {
+      margin: 0 auto;                   /* положение по центру экрана */
+      width: 1200px;	                  /* ширина */
+      background: #FBFBDC;              /* цвет фона */
+      border-right: 1px solid #23A650;  /* зеленая рамка */
+      border-left:  1px solid #23A650;  /* зеленая рамка */
+    }
+  </style>
+
+<div class="ramka">
+
+<h2 class="text-user" style="padding-top: 10px;">Сотрудник: {{ user.get_username }}</h2>
+
+<h2 class="text-number">Страховой расчёт № {{ data.id }} от {{ data.date|date:"d.m.Y" }}</h2>
+
+<form target="_blank" action="{% url 'check_record' user_id %}" method="post">
+
+  {% csrf_token %}
+  {{ user_form.admin.label_tag }}
+  {{ user_form.admin }}
+
+  <div style="margin-left: 30px;">
+  <div class="container-fluid">
+    <h4 class="text-head">Страхователь</h4>
+    <div class="form-row" style="margin-left: 15px;">
+      <div class="form-group col-xs-3" >
+        <label class="text-label">Фамилия:</label>
+        {{ user_form.familyname }}
+      </div>
+      <div class="form-group col-xs-3">
+        <label class="text-label">Имя:</label>
+        {{ user_form.name }}
+      </div>
+      <div class="form-group col-xs-3">
+        <label class="text-label">Отчество:</label>
+        {{ user_form.father_name }}
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <h4 class="text-head">Транспортное средство</h4>
+    <div class="container-fluid">
+    <div class="form-row">
+      <div class="form-group col-xs-3" style="width: 240px;">
+        <label class="text-label">Марка:</label>
+          {{ user_form.brand }}
+        </div>
+      <div class="form-group col-xs-3" style="width: 240px;">
+        <label class="text-label">Модель:</label>
+          {{ user_form.model }}
+      </div>
+    <div class="form-group col-xs-3" style="width: 240px;">
+      <label class="text-label">Год выпуска:</label>
+        {{ user_form.car_year }}
+      </div>
+    <div class="form-group col-xs-3" style="width: 240px;">
+      <label class="text-label">Cтраховая сумма:</label>
+        {{ user_form.insurance_amount }}
+    </div>
+    <div class="form-group col-xs-3" style="width: 190px;">
+      <label class="text-label">Класс автомастерской:</label>
+      {{ user_form.class_master }}
+    </div>
+    </div>
+    </div>
+  </div>
+
+
+  <div class="container-fluid">
+    <h4 class="text-head">Водители</h4>
+    <div class="container-fluid">
+      <div class="form-row">
+        <div class="form-group col-xs-3" style="width: 240px;">
+          <label class="text-label">Возраст:</label>
+          {{ user_form.driver_age }}
+        </div>
+
+        <div class="form-group col-xs-3" style="width: 240px;">
+          <label class="text-label">Стаж:</label>
+          {{ user_form.experience }}
+        </div>
+
+        <div class="form-group col-xs-3" style="width: 240px;">
+          <label class="text-label">Число водителей:</label>
+          {{ user_form.number_of_drivers }}
+        </div>
+
+        <div class="form-group col-xs-3" style="width: 240px;">
+          <label class="text-label">КБМ:</label>
+          {{ user_form.kmb }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="container-fluid">
+    <h4 class="text-head">Страховые риски</h4>
+    <div class="container-fluid">
+      <div class="form-row" style="margin-left: 15px;">
+
+        <div class="form-group col-xs-3">
+          {{ user_form.accident_caused_by_third_parties }}
+          <label class="text-label-check">ДТП по вине третьих лиц</label>
+        </div>
+
+        <div class="form-group col-xs-3">
+          {{ user_form.accident_caused_by_drivers_of_the_insured_car }}
+          <label class="text-label-check">ДТП по вине водителей застрахованного ТС</label>
+        </div>
+
+        <div class="form-group col-xs-3">
+          {{ user_form.damage }}
+          <label class="text-label-check">Механические повреждения</label>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-left: 15px;">
+        <div class="form-group col-xs-3">
+          {{ user_form.unlawful_actions_of_third_parties }}
+          <label class="text-label-check">Противоправные действия третьих лиц</label>
+        </div>
+
+        <div class="form-group col-xs-3">
+          {{ user_form.broken_glass }}
+          <label class="text-label-check">Бой стекол ТС</label>
+        </div>
+
+        <div class="form-group col-xs-3">
+          {{ user_form.hijacking }}
+          <label class="text-label-check">Хищение</label>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-left: 15px;">
+        <div class="form-group col-xs-3">
+          <input id="checkedAll" type="checkbox">
+          <label class="text-label-check">Выбрать все</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="container-fluid">
+  <h4 class="text-head">Варианты оплаты</h4>
+    <div class="form-check form-check-inline" style="right:30px;">
+      {{ user_form.at_a_time }}
+      </div>
+      </div>
+  <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="form-row">
+          <div class="form-group col-xs-3" style="width: 240px;">
+            <label class="text-label">Количество<br>платежей:</label>
+            {{ user_form.number_of_payments }}
+          </div>
+          <div class="form-group col-xs-3" style="width: 240px;">
+            <label class="text-label">Срок страхования<br>(месяцы):</label>
+              {{ user_form.insurance_period }}
+          </div>
+          <div class="form-group col-xs-3" style="width: 240px;">
+            <label class="text-label">Коэффициент соотношения<br> выплат к премиям:</label>
+              {{ user_form.prize_kf }}
+          </div>
+          <div class="form-group col-xs-3" style="width: 240px;">
+            <label class="text-label">Андереррайтерский<br>коэффициент:</label>
+              {{ user_form.anderright_kf }}
+            </div>
+          </div>
+        </div>
+  </div>
+  <div class="container-fluid">
+    <h4 class="text-head">Добровольное страхование гражданской ответственности</h4>
+    <div class="container-fluid">
+    <div class="form-row">
+      <div class="form-group col-xs-3" style="width: 240px;">
+        <label class="text-label">Страховая сумма:</label>
+          {{ user_form.insurance_liability }}
+      </div>
+      <div class="form-group col-xs-3" style="width: 240px;">
+        <label class="text-label">Страховая премия по ОСАГО:</label>
+          {{ user_form.insurance_prize_osago }}
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <h4 class="text-head">Страхование от несчастных случаев:</h4>
+    <div class="container-fluid">
+    <div class="form-row">
+      <div class="form-group col-xs-3" style="width: 240px;">
+        <label class="text-label">Страховая сумма:</label>
+          {{ user_form.insurance_accident }}
+      </div>
+      <div class="form-group col-xs-3">
+        <label class="text-label">Застрахованные посадочные места:</label>
+          {{ user_form.insurance_places }}
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="container-fluid">
+      <button type="submit" class="but-kasko" style="margin-left:500px; margin-bottom:20px; margin-right:50px;" name="Payment">Расчёт</button>
+      <button type="submit" class="but-kasko" style="margin-right:50px;" name="UpdatePay">Обновить расчет</button>
+      <a href="/home/" class="but-kasko-cancel" style="margin-right:50px;" role="button" aria-pressed="true">Отмена</a>
+    </div>
+  </div>
+  </div>
+</form>
+</div>
+
+
+<script type="text/javascript">
+  // var arr = {{ data }};
+  let elems=document.querySelectorAll('.form-control');
+      elems[0].value = "{{ data.familyname }}";
+      elems[1].value = "{{ data.name }}";
+      elems[2].value = "{{ data.father_name }}";
+      elems[3].value = "{{ data.brand }}";
+      elems[4].value = "{{ data.model }}";
+      elems[5].value = {{ data.car_year }};
+      elems[6].value = {{ data.insurance_amount }};
+      elems[7].value = {{ data.class_master }};
+      elems[8].value = {{ data.driver_age }};
+      elems[9].value = {{ data.experience }};
+      elems[10].value = {{ data.number_of_drivers }};
+      elems[11].value = {{ data.kmb }};
+      elems[12].value = {{ data.number_of_payments }};
+      elems[13].value = {{ data.insurance_period }};
+      elems[14].value = {{ data.prize_kf }};
+      elems[15].value = {{ data.anderright_kf }};
+      elems[16].value = {{ data.insurance_liability }};
+      elems[17].value = {{ data.insurance_prize_osago }};
+      elems[18].value = {{ data.insurance_accident }};
+      elems[19].value = "{{ data.insurance_places }}";
+
+  elems=document.querySelectorAll('.qwe');
+
+  if("{{ data.accident_caused_by_third_parties }}" == "True"){
+    elems[0].checked = true;
+  }
+  else{
+    elems[0].checked = false;
+  }
+  if("{{ data.accident_caused_by_drivers_of_the_insured_car }}" == "True"){
+    elems[1].checked = true;
+  }
+  else{
+    elems[1].checked = false;
+  }
+
+  if("{{ data.damage }}" == "True"){
+    elems[2].checked = true;
+  }
+  else{
+    elems[2].checked = false;
+  }
+
+  if("{{ data.broken_glass }}" == "True"){
+    elems[3].checked = true;
+  }
+  else{
+    elems[3].checked = false;
+  }
+
+  if("{{ data.unlawful_actions_of_third_parties }}" == "True"){
+    elems[4].checked = true;
+  }
+  else{
+    elems[4].checked = false;
+  }
+
+  if("{{ data.hijacking }}" == "True"){
+    elems[5].checked = true;
+  }
+  else{
+    elems[5].checked = false;
+  }
+let checking = true;
+let error = 0
+for(var i=0; i<6; i++){
+  if(elems[i].checked == false){
+    checking = false;
+  }
+  // }else{
+  //   if(i != 5) error++;
+  // }
+}
+
+// if(error == 0)
+let check = document.querySelector('#checkAll');
+if(checking){
+  check.checked = true;
+}
+else{
+  check.checked = false;
+}
+if({{ data.number_of_payments }} > 1){
+  let check = document.querySelector('#id_at_a_time_1');
+  check.checked = true;
+}
+else{
+  let check = document.querySelector('#id_at_a_time_0');
+  check.checked = true;
+}
+
+</script>
+<script>
+$(document).ready(function() {
+    $("#checkedAll").change(function() {
+        if (this.checked) {
+            $(".qwe").each(function() {
+                this.checked=true;
+            });
+        } else {
+            $(".qwe").each(function() {
+                this.checked=false;
+            });
+        }
+    });
+
+    $(".qwe").click(function () {
+        if ($(this).is(":checked")) {
+            var isAllChecked = 0;
+
+            $(".qwe").each(function() {
+                if (!this.checked)
+                    isAllChecked = 1;
+            });
+
+            if (isAllChecked == 0) {
+                $("#checkedAll").prop("checked", true);
+            }
+        }
+        else {
+            $("#checkedAll").prop("checked", false);
+        }
+    });
+});
+</script>
+
+{% endblock %}
